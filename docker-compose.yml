@@ -1,0 +1,66 @@
+version: '3'
+
+networks:
+  searchnetwork:
+    external: true
+
+services:
+    elactic_web:
+        build:
+            context: .docker/nginx
+            args:
+              PHP_UPSTREAM_CONTAINER: "elastic_app"
+        volumes:
+            - ./:/var/www
+        ports:
+            - "80:80"
+        networks:
+          - searchnetwork
+
+#   php 7.4
+    elastic_app:
+      build:
+        context: .docker/php74
+        args:
+          PUID: "1000"
+          # PHP_INSTALL_XDEBUG: "false"
+          # INSTALL_GIT: "true"
+          # PHP_XDEBUG_PORT: "9000"
+      volumes:
+        - ./:/var/www
+#       - .docker/php74/xdebug_custom.ini:/usr/local/etc/php/conf.d/51-xdebug-custom.ini
+      environment:
+        - "PHP_IDE_CONFIG=serverName=localhost"
+      hostname: "localhost"
+      user: www-data
+      networks:
+        - searchnetwork
+
+    elactic_database:
+        image: mysql:5.7
+        environment:
+            - "MYSQL_ROOT_PASSWORD=testing"
+            - "MYSQL_DATABASE=testing"
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./:/var/www
+        networks:
+          - searchnetwork
+
+    elacticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.8.1
+        container_name: es01
+        environment:
+          - xpack.security.enabled=false
+          - discovery.type=single-node
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+        volumes:
+          - .docker/es:/usr/share/elasticsearch/data
+        ports:
+          - 9200:9200
+        networks:
+          - searchnetwork
