@@ -35,4 +35,9 @@ return [
         'host' => env('ELASTICSEARCH_HOST', 'localhost'),
         'port' => env('ELASTICSEARCH_PORT', 9200),
     ],
+
+    'manticore' => [
+        'host' => env('MANTICORE_HOST', 'manticore'),
+        'port' => env('MANTICORE_PORT', 9308),
+    ],
 ];

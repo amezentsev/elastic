@@ -13,3 +13,8 @@ yarn-error.log
 docker-compose.override.yml
 .idea
 storage/
+.docker/es
+.docker/manticore/binlog
+.docker/manticore/goods
+.docker/manticore/manticore.json
+.docker/manticore/state.sql

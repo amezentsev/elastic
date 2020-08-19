@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 use App\Models\Good;
 use Illuminate\Console\Command;
 use Elasticsearch\Client;
+use Manticoresearch\Client as ManticoreClient;
 
 class ReindexCommand  extends Command
 {
@@ -22,19 +23,24 @@ class ReindexCommand  extends Command
      * @var string
      */
     protected $description = 'Indexes all goods to Elasticsearch';
+
     /** @var Client */
     private $elasticsearch;
 
+    /** @var ManticoreClient */
+    private $client;
+
     /**
-     * Create a new command instance.
-     *
+     * ReindexCommand constructor.
      * @param Client $elasticsearch
+     * @param ManticoreClient $client
      */
-    public function __construct(Client $elasticsearch)
+    public function __construct(Client $elasticsearch, ManticoreClient $client)
     {
         parent::__construct();
 
         $this->elasticsearch = $elasticsearch;
+        $this->client = $client;
     }
     /**
      * Execute the console command.
@@ -44,6 +50,16 @@ class ReindexCommand  extends Command
     public function handle()
     {
         $this->info('Indexing all goods. This might take a while...');
+
+        $index = $this->client->index('goods');
+        $index->drop();
+        $index->create([
+            'name' => ['type'=>'text'],
+            'description' => ['type'=>'text'],
+            'quantity' => ['type'=>'integer'],
+            'categories' => ['type'=>'json']
+        ]);
+
         foreach (Good::cursor() as $good)
         {
             $this->elasticsearch->index([
@@ -53,6 +69,13 @@ class ReindexCommand  extends Command
                 'body' => $good->toSearchArray(),
             ]);
             $this->output->write('.');
+
+            $index->addDocument([
+                'name' => $good->name,
+                'description' => $good->description,
+                'quantity' => (int)$good->quantity,
+                'categories' => json_encode($good->categories)
+            ], (int)$good->id);
         }
         $this->info('\nDone!');
     }

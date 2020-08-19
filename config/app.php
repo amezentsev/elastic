@@ -229,4 +229,6 @@ return [
 
     ],
 
+    // elastic | manticore
+    'default_search_driver' => config(env('DEFAULT_SEARCH_DRIVER'), 'elastic')
 ];

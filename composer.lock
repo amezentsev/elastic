@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2534f36255e46013d8177312c45e2c2f",
+    "content-hash": "11f429c083976bc5273e4520400add30",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1362,6 +1362,62 @@
                 }
             ],
             "time": "2020-08-09T10:34:01+00:00"
+        },
+        {
+            "name": "manticoresoftware/manticoresearch-php",
+            "version": "1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/manticoresoftware/manticoresearch-php.git",
+                "reference": "a8212f1ffdc21b1101476cf23426c71dac39baf9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/manticoresoftware/manticoresearch-php/zipball/a8212f1ffdc21b1101476cf23426c71dac39baf9",
+                "reference": "a8212f1ffdc21b1101476cf23426c71dac39baf9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.1",
+                "psr/log": "^1.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "*",
+                "phpunit/phpunit": "^7.5",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "suggest": {
+                "ext-curl": "*",
+                "guzzlehttp/psr7": "^1.6",
+                "monolog/monolog": "*",
+                "php-http/curl-client": "^1.7",
+                "php-http/httplug": "^1.1",
+                "php-http/message": "^1.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Manticoresearch\\": "src/Manticoresearch/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Adrian Nuta",
+                    "email": "adriannuta@gmail.com"
+                }
+            ],
+            "description": "PHP Client for Manticore Search",
+            "keywords": [
+                "client",
+                "manticoresearch",
+                "search"
+            ],
+            "time": "2020-07-22T20:46:45+00:00"
         },
         {
             "name": "monolog/monolog",
