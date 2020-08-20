@@ -28,17 +28,22 @@ class ManticoreRepository implements SearchRepository
     private function searchManticore(string $query = '') : array
     {
         $index = $this->client->index('goods');
-        $results = $index->search($query)->get();
+        $results = $index->search($query)->limit(50)->get();
 
         return $results->getResponse()->getResponse();
     }
     private function buildCollection(array $items): Collection
     {
-        $ids = Arr::pluck($items['hits']['hits'], '_id');
+        $response = new Collection;
+        foreach ($items['hits']['hits'] as $hit) {
+            $good = new Good();
+            $good->name = $hit['_source']['name'];
+            $good->description = $hit['_source']['description'];
+            $good->categories = $hit['_source']['categories'];
+            $good->quantity = $hit['_source']['quantity'];
+            $response->push($good);
+        }
 
-        return Good::findMany($ids)
-            ->sortBy(function ($article) use ($ids) {
-                return array_search($article->getKey(), $ids);
-            });
+        return $response;
     }
 }

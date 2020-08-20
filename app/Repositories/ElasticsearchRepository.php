@@ -36,17 +36,23 @@ class ElasticsearchRepository implements SearchRepository
                         'query' => $query,
                     ],
                 ],
+                'size' => 50
             ],
         ]);
         return $items;
     }
     private function buildCollection(array $items): Collection
     {
-        $ids = Arr::pluck($items['hits']['hits'], '_id');
+        $response = new Collection;
+        foreach ($items['hits']['hits'] as $hit) {
+            $good = new Good();
+            $good->name = $hit['_source']['name'];
+            $good->description = $hit['_source']['description'];
+            $good->categories = $hit['_source']['categories'];
+            $good->quantity = $hit['_source']['quantity'];
+            $response->push($good);
+        }
 
-        return Good::findMany($ids)
-            ->sortBy(function ($article) use ($ids) {
-                return array_search($article->getKey(), $ids);
-            });
+        return $response;
     }
 }

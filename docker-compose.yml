@@ -85,3 +85,29 @@ services:
           - .docker/manticore/manticore.conf:/etc/manticoresearch/manticore.conf
         networks:
           - searchnetwork
+
+    jmetter_master:
+      build: .docker/jmeter
+      command: master
+      tty: true
+      ports:
+          - "60000:60000"
+      environment:
+          - "JMETER_VERSION=3.3"
+      volumes:
+          - .docker/jmeter/test/:/jmeter/sample/
+      networks:
+          - searchnetwork
+
+    jmetter_server:
+      image: pedrocesarti/jmeter-docker:latest
+      command: server
+      tty: true
+      ports:
+          - "50000:50000"
+          - "1099:1099"
+      networks:
+          - searchnetwork
+      depends_on:
+          - jmetter_master
+

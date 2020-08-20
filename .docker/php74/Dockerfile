@@ -19,6 +19,7 @@ FROM php:7.4-fpm
 #--------------------------------------------------------------------------
 #
 RUN apt-get -qy update && apt-get -qy install --no-install-recommends \
+        htop \
         wget curl \
         sudo \
         zip unzip \
